@@ -65,6 +65,16 @@ Then it will server `10.0.0.100-10.0.0.150` addresses to the containers. As the 
 
 ## LXC
 
+edit `/etc/lxc/default.conf` to contain:
+
+```
+lxc.network.type=veth
+lxc.network.link=lxcbr0
+lxc.network.ipv4 = 0.0.0.0/24
+lxc.network.flags=up
+lxc.network.mtu=1500
+```
+
 You are now ready to try out LXC
 
 ```
