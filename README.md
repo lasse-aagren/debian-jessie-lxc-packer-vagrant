@@ -50,4 +50,17 @@ which gives the LXC containers full network access to the host, and the other wa
 
 ### DHCP / DNS
 
+I use `dnsmasq` as DNS and DHCP for the containers. Install it by:
+```
+# apt-get install dnsmasq
+```
+Then edit `/etc/dnsmasq.conf` with only two lines enabled:
+
+```
+interface=lxcbr0
+dhcp-range=10.0.0.100,10.0.0.150,255.255.255.0,12h
+```
+
+Then it will server `10.0.0.100-10.0.0.150` addresses to the containers. As the `lxcbr0` interface is not a psysical network interface it will not do package checksums, which is needed for the DHCP process. Thus we need the `ethtool` command above.
+
 [2015-02-24] To be continued...
