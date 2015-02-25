@@ -82,9 +82,32 @@ You are now ready to try out LXC
 # lxc-start -n mycontainer
 ...
 ```
-Read more about LXC otherwhere
+Read more about LXC elsewhere
 
-[2015-02-24] To be continued...
+## vagrant-lxc
+to use `vagrant-lxc` just install:
+
+```
+# apt-get install vagrant
+```
+
+and then as your normal user:
+
+```
+$ vagrant plugin install vagrant-lxc
+```
+
+You might need some exstra libraries to compile this plugin. Now you are ready to control LXC through vagrant. To test with a base box from the cloud, run as a unprivileged user:
+
+```
+$ mkdir mytestvagrant
+$ vagrant init fgrehm/wheezy64-lxc
+$ vagrant up --provider=lxc
+....
+```
+`vagrant-lxc` requires sudo rigts, because user namespaces are not supported yet
+
+[2015-02-25] To be continued...
 
 ## Resources
 * https://wiki.debian.org/LXC
