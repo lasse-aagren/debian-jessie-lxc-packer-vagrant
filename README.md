@@ -107,6 +107,114 @@ $ vagrant up --provider=lxc
 ```
 `vagrant-lxc` requires sudo rigts, because user namespaces are not supported yet
 
+## packer-builder-lxc
+
+As of this writing vagrant-lxc doesn't seem to work so well with systemd on Debian Jessie. So if you target that platform, do something else.
+
+Here is what I did to get `packer-builder-lxc` working with latest` packer.
+
+On:
+
+https://github.com/ustream/packer-builder-lxc/releases
+
+there is a binary release of the builder. But this binary is incompatible with the latest release of Packer. So I choose to build my own version. This requires [gox](https://github.com/mitchellh/gox), which is a crossplatform compiler for the Go Language. [gox](https://github.com/mitchellh/gox) can't be installed on the debian packgaged version of go without using sudo, and thus "tainting" the root system. As I don't want that, I choose to fetch my own binary distribution of Go as an unprivileged user:
+
+### Building gox
+
+```
+$ wget https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz
+$ mkdir gostuff
+$ cd gostuff
+$ tar xvzf ../go1.4.2.linux-amd64.tar.gz
+$ export GOROOT=$(pwd)/go
+$ mkdir path
+$ export GOPATH=$(pwd)/path
+$ export PATH=$GOROOT/bin:$PATH
+$ go get github.com/mitchellh/gox
+$ export PATH=$GOPATH/bin:$PATH
+```
+
+Now `gox` is installed, before in can be used we need to run:
+
+```
+$ gox -build-toolchain
+```
+### building packer-builder-lxc
+
+
+Now we need to fetch some dependencies for `packer-builder-lxc`:
+
+```
+$ go get github.com/mitchellh/packer/packer/plugin
+$ go get github.com/ustream/packer-builder-lxc/builder/lxc
+```
+
+The last one will fail with:
+
+```
+# github.com/ustream/packer-builder-lxc/builder/lxc
+path/src/github.com/ustream/packer-builder-lxc/builder/lxc/builder.go:106: cannot use artifact (type *Artifact) as type packer.Artifact in return argument:
+	*Artifact does not implement packer.Artifact (missing State method)
+```
+because github.com/ustream/packer-builder-lxc/builder/lxc is not ready for the latest version of packer. I solve this by implement the missing State method as they do in:
+
+https://github.com/lmars/packer-post-processor-vagrant-s3/pull/7/files
+
+so fire up your editor on `path/src/github.com/ustream/packer-builder-lxc/builder/lxc/artifact.go` and add the missing method:
+
+```
+func (a *Artifact) State(name string) interface{} {
+  return nil
+}
+```
+
+save it, and run:
+```
+$ go get github.com/ustream/packer-builder-lxc/builder/lxc
+```
+
+again. Now we are ready to build the packer builder:
+
+```
+$ git clone https://github.com/ustream/packer-builder-lxc
+$ cd packer-builder-lxc/
+$ gox -os=linux -arch=amd64 -output=pkg/{{.OS}}_{{.Arch}}/packer-builder-lxc
+```
+
+### Installing packer-builder-lxc
+
+Deploy the builder to your packer directory by:
+
+```
+cp pkg/linux_amd64/packer-builder-lxc PATHTOYOURPACKERINSTALLATION
+```
+
+and edit the file `~/.packerconfig` to at least contain something:
+
+```
+{
+  "builders": {
+      "lxc": "PATHTOYOURPACKERINSTALLATION/packer-builder-lxc"
+  }
+}
+```
+
+Now you are ready to toy with the sample configuration in this repository by changing to ` packer directory` and running:
+
+```
+packer build jessie.json
+```
+
+the packer post processor doesn't support building vagrant boxes out of this yet, so resulting files (`lxc-config ` and `rootfs.tar.gz`) in the `output-lxc` directory need to be packed together with a third file, containing something like the `metadata.json` e.g. by:
+
+```
+$ cp metadata.json output-lxc/
+$ cd output-lxc
+$ tar cvf jessie-lxc.box *
+```
+
+Then you have the box
+
 [2015-02-25] To be continued...
 
 ## Resources

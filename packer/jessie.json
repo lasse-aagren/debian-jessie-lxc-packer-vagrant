@@ -1,0 +1,28 @@
+{
+    "builders": [
+        {
+            "type": "lxc",
+            "config_file": "lxc/config",
+            "template_name": "debian",
+            "template_parameters": ["--arch", "amd64", "--release", "jessie"],
+            "template_environment_vars": [
+                "MIRROR=http://http.debian.net/debian/"
+            ],
+            "target_runlevel": 3
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "only": ["lxc"],
+            "environment_vars": [
+                "DISTRIBUTION=debian",
+                "RELEASE=jessie"
+            ],
+            "scripts": [
+              "scripts/lxc/base.sh",
+              "scripts/lxc/vagrant-lxc-fixes.sh"
+            ]
+       }
+    ]
+}
