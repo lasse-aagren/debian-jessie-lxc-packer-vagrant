@@ -5,6 +5,10 @@ lxc.pivotdir = lxc_putold
 lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
 lxc.mount.entry = sysfs sys sysfs defaults 0 0
 
+#hack from https://github.com/lxc/lxc/issues/335
+lxc.autodev=1
+lxc.kmsg=0
+
 # Default console settings
 lxc.tty = 4
 lxc.pts = 1024
