@@ -222,3 +222,5 @@ Then you have the box
 * https://wiki.archlinux.org/index.php/Linux_Containers
 * https://github.com/ustream/packer-builder-lxc
 * https://github.com/fgrehm/vagrant-lxc
+* https://github.com/mitchellh/gox
+* https://packer.io/
