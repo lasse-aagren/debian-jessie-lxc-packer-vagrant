@@ -5,7 +5,7 @@ Debian Jessie LXC / Packer / Vagrant HOWTO
 - [Network](#network)
 	- [Bridged Network device](#bridged-network-device)
 	- [IP Masquerading and Forwarding](#ip-masquerading-and-forwarding)
-	- [DHCP / DNS](#dhcp-dns)
+	- [DHCP / DNS](#dhcp--dns)
 - [LXC](#lxc)
 - [vagrant-lxc](#vagrant-lxc)
 - [packer-builder-lxc](#packer-builder-lxc)
