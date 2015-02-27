@@ -1,9 +1,23 @@
 Debian Jessie LXC / Packer / Vagrant HOWTO
 ======================================
 
+- [First things first](#first-things-first)
+- [Network](#network)
+	- [Bridged Network device](#bridged-network-device)
+	- [IP Masquerading and Forwarding](#ip-masquerading-and-forwarding)
+	- [DHCP / DNS](#dhcp-dns)
+- [LXC](#lxc)
+- [vagrant-lxc](#vagrant-lxc)
+- [packer-builder-lxc](#packer-builder-lxc)
+	- [Building gox](#building-gox)
+	- [building packer-builder-lxc](#building-packer-builder-lxc)
+	- [Installing packer-builder-lxc](#installing-packer-builder-lxc)
+- [Resources](#resources)
+
 My take on howto setup Debian Jessie to run vagrant-lxc (keywords: LXC, bridge-utils, dnsmasq, packer-builder-lxc)
 
 ## First things first
+
 ```
 # apt-get install lxc bridge-utils
 ```
