@@ -210,7 +210,7 @@ the packer post processor doesn't support building vagrant boxes out of this yet
 ```
 $ cp metadata.json output-lxc/
 $ cd output-lxc
-$ tar cvf jessie-lxc.box *
+$ tar czf jessie-lxc.box *
 ```
 
 Then you have the box
