@@ -29,3 +29,8 @@ sed -i '/UsePAM/aUseDNS no' /etc/ssh/sshd_config
 sed -i '/env_reset/aDefaults        env_keep += "SSH_AUTH_SOCK"' /etc/sudoers;
 #sed -i '/exit/i\/usr\/bin\/apt-get update' /etc/rc.local;
 adduser vagrant adm
+
+#hack because https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=751636
+#probably fine for vagrant - don't know with production system
+systemctl disable ssh.service
+systemctl enable ssh.socket
